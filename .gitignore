@@ -12,6 +12,7 @@
 **/__pycache__/
 *.py[cod]
 .DS_Store
+/data
 
 # Generated reports are reproducible products, not source.
 /reports/figures/*
