@@ -48,6 +48,14 @@ class ReasonCode(str, Enum):
     NOT_MEMBER = "not_member"
     NOT_APPLICABLE = "not_applicable"
     INSUFFICIENT_PEERS = "insufficient_peers"
+    LABEL_UNAVAILABLE = "label_unavailable"
+    UNRESOLVED_TRANSFORM = "unresolved_transform"
+    VISIBILITY_UNKNOWN = "visibility_unknown"
+    NONFINITE = "nonfinite"
+    INVALID_QUATERNION = "invalid_quaternion"
+    NONPOSITIVE_DT = "nonpositive_dt"
+    EXCESSIVE_GAP = "excessive_gap"
+    INCOMPLETE_EVIDENCE = "incomplete_evidence"
 
 
 UNAVAILABLE_SOURCE_REASONS = frozenset(

@@ -1,0 +1,41 @@
+schema_version: "1.0.0"
+dataset: mixed_signals
+sequence_id: mini_7
+source:
+  configured_data_root: data
+  archive: train/mini_7.tar
+  hugging_face_dataset: sberrio/Mixed-Signals-V2X
+  hugging_face_revision: 1a61aea747aa6bc45da2c2f085a1f1d3abc41f91
+  xet_object_id: 46e9dbe9f6e952be9186a6271abbcaaf11c965a5589d785fc278afd3eb235663
+layout:
+  agents: ["003", "004", dome, laser, top]
+  top_anchor_agent: top
+  expected_sync_start: 0
+  expected_sync_stop: 298
+  label_file_index_offset: 1
+  expected_label_stop: 289
+time:
+  filename_fractional_convention: omitted_leading_zeroes
+  decision_anchor: top_cloud_source_time
+  match_policy: buffered_nearest
+  maximum_absolute_age_ns: 75000000
+  lookahead_buffer_ns: 5000000
+point_cloud:
+  expected_fields: [x, y, z, intensity]
+  expected_scalar_type: float32
+  accepted_encodings: [ascii, binary, binary_compressed]
+  intensity_normalization:
+    expression: clip(raw_intensity / 3500, 0, 1)
+    divisor: 3500.0
+    applicability: verified_for_mini_7_contract
+coordinates:
+  common_frame: top
+  vehicle_raw_frame: vehicle_sensor_local
+  infrastructure_raw_frame: map_or_top_dataset_frame
+  reported_vehicle_vertical_origin_adjustment_m: 3.25
+  calibration_status: unresolved
+development_count_reference:
+  reference_id: mini7-development-fixed-log-count-v1
+  expected_log1p_count: 3.044522437723423
+  scale: 1.0
+  development_only: true

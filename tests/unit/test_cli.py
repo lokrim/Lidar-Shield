@@ -5,6 +5,7 @@ import pytest
 
 from lidar_shield import __version__
 from lidar_shield.cli import build_parser, main
+from lidar_shield.data.cache import CacheBuildResult, CacheError
 
 FIXTURE_ROOT = Path(__file__).parents[1] / "fixtures" / "synthetic"
 PROJECT_ROOT = Path(__file__).parents[2]
@@ -87,3 +88,81 @@ def test_d0_demo_is_stable_and_accounts_for_every_event(
         "stale",
         "unmatched",
     }
+
+
+def test_cache_and_d1_cli_surfaces(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    result = CacheBuildResult(
+        clean_dir=tmp_path,
+        output_hashes={"frame.parquet": "a" * 64},
+        manifest_sha256="b" * 64,
+        resumed=False,
+    )
+    captured = []
+
+    def fake_build(config: object) -> CacheBuildResult:
+        captured.append(config)
+        return result
+
+    monkeypatch.setattr("lidar_shield.cli.build_clean_cache", fake_build)
+    arguments = [
+        "cache",
+        "build",
+        "--data-root",
+        "data",
+        "--artifact-root",
+        str(tmp_path),
+        "--experiment-id",
+        "cli-fixture",
+        "--frames",
+        "0:2",
+    ]
+    assert main(arguments) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "verified"
+    assert payload["resumed"] is False
+    assert captured
+
+    monkeypatch.setattr(
+        "lidar_shield.cli.build_d1_payload", lambda value: {"demo": "D1"}
+    )
+    arguments[0:2] = ["demo", "d1"]
+    assert main(arguments) == 0
+    assert json.loads(capsys.readouterr().out) == {"demo": "D1"}
+
+
+def test_cache_cli_verification_and_errors(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    result = CacheBuildResult(tmp_path, {}, "c" * 64, True)
+    monkeypatch.setattr("lidar_shield.cli.verify_clean_cache", lambda value: result)
+    assert main(["cache", "verify", "--cache-dir", str(tmp_path)]) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "verified"
+
+    def fail(_value: object) -> CacheBuildResult:
+        raise CacheError("broken")
+
+    monkeypatch.setattr("lidar_shield.cli.verify_clean_cache", fail)
+    assert main(["cache", "verify", "--cache-dir", str(tmp_path)]) == 2
+    assert "cache error: broken" in capsys.readouterr().err
+    assert (
+        main(
+            [
+                "cache",
+                "build",
+                "--data-root",
+                "data",
+                "--experiment-id",
+                "x",
+                "--frames",
+                "bad",
+            ]
+        )
+        == 2
+    )
+    assert "--frames" in capsys.readouterr().err

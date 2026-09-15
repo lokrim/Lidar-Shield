@@ -37,6 +37,14 @@ cardinality and deliberate overlap renames. The SciPy contract confirms
 strictly increasing `Slerp` key times. M1 validates finiteness and unit
 quaternions before invoking SciPy and bounds interpolation separately.
 
+M2 rechecked current pypcd4 point-cloud metadata/load/save APIs and PyArrow 19
+Parquet table/write/read/metadata APIs through Context7. The selected lock uses
+pypcd4 1.5.0 and PyArrow 23.0.1; the adapter validates runtime metadata rather
+than assuming the documentation example version. Cache writes omit pandas
+indexes, replace incidental schema metadata with a fixed project marker, use
+fixed Zstandard/dictionary/statistics/data-page settings, and verify every file
+after writing.
+
 `torch` is locked only through the `trust-neural` extra and `open3d` only through
 the `visualization` extra; neither was installed in the local M0 base smoke.
 Detector dependencies are deliberately unselected until the M10 gate.

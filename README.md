@@ -5,13 +5,16 @@ studying sender trust, temporal assurance, communication, and robust fusion in
 the Mixed Signals V2X setting. The distribution and CLI are `lidar-shield`; the
 Python import package is `lidar_shield`.
 
-Milestones 0 and 1 are implemented. In addition to the clean package foundation,
+Milestones 0 through 2 are implemented. In addition to the clean package foundation,
 M1 provides canonical frame/object/evidence contracts, exact-time matching,
 bounded pose and rigid-frame primitives, configured agent capabilities and
 membership, split/leakage controls, versioned manifests, deterministic contract
-fixtures, and the D0 synthetic replay. It does **not** implement raw Mixed
-Signals ingestion, security evidence, trust scores/models, attacks, temporal
-control, communication/fusion, or scientific evaluation.
+fixtures, and the D0 synthetic replay. M2 adds official `mini_7` parsing, raw
+evidence, fixed baselines, a verified clean Parquet cache, and D1. Authoritative
+cross-agent calibration remains unavailable, so affected real spatial evidence
+is explicit unknown—not a fabricated transform. Learned models, attacks,
+temporal control, communication/fusion, and scientific evaluation remain later
+milestones.
 
 ## Clean setup
 
@@ -47,6 +50,7 @@ Run the complete local gate:
 ```bash
 scripts/verify_m0.sh
 scripts/verify_m1.sh
+scripts/verify_m2.sh
 ```
 
 Or run its parts:
@@ -104,7 +108,7 @@ environments.
 M1 adds canonical frame/object/evidence contracts, synchronization, pose
 handling, split registration, and contract fixtures. See
 [the M1 contract](docs/M1_CONTRACTS.md). Official raw archive processing starts
-in M2. Later milestones add attacks, models, temporal control,
+in M2; see [the M2 evidence/cache contract](docs/M2_MINI7.md). Later milestones add attacks, models, temporal control,
 communication/fusion consumers, evaluation, and reports. Detector/BEV work is an
 optional, gated M10 extension. See [milestone status](docs/MILESTONE_STATUS.md).
 

@@ -1,4 +1,4 @@
-# M0/M1 verification record
+# M0–M2 verification record
 
 Verification is run with `scripts/verify_m0.sh`, which performs a frozen editable
 sync, CLI version/config smoke checks, dataset-free tests, Ruff lint/format, and
@@ -6,6 +6,20 @@ mypy strict type checking.
 
 M1 adds `scripts/verify_m1.sh`, which also runs the D0 timeline and every M1
 contract, synchronization, geometry, split, leakage, fixture, and manifest check.
+
+M2 adds `scripts/verify_m2.sh`, which runs all static/test gates and, when the
+official archive is present, the two-frame real D1 cache/playback and cache
+verification.
+
+- Local macOS arm64, CPython 3.12.13, 2026-09-15 (M2): passed. Observed 74
+  tests passing with 90.10% branch-aware coverage; Ruff and strict mypy passed.
+  Official `mini_7` indexing found five agents × 299 clouds, three odometry
+  CSVs with complete filename/time agreement, and semantic labels 0–289. Real
+  `top` and `dome` PCDs decoded as ASCII float32 XYZI. D1 produced ten
+  frame-agent rows and verified three clean Parquet outputs; real
+  transform-dependent evidence correctly remained unavailable. `uv build`
+  produced the source distribution and wheel with all M2 modules and no raw or
+  historical tree.
 
 - Local macOS arm64, CPython 3.12.13, 2026-09-15 (M1): passed. Observed 58
   tests passing with 94.70% branch-aware coverage; frozen dependency check, D0,

@@ -21,7 +21,7 @@ artifacts/<experiment_id>/
 ├── experiment.json
 ├── splits.json
 ├── sequences/<sequence_id>/
-│   ├── source_manifest.json
+│   ├── clean/{source_manifest.json,resume.complete.json}
 │   ├── clean/{frame,object,evidence}.parquet
 │   └── variants/<variant_id>/...
 ├── models/<model_id>/...
@@ -34,3 +34,12 @@ expected values, exact byte sizes, and integrity checks without raw data.
 `manifests/contracts/m1_schema_registry.json`, `manifests/datasets/m1_*.json`,
 and `manifests/experiments/m1_contract_fixtures.json` bind the M1 schema,
 configuration registries, two synthetic sources, and producer command.
+
+M2 stores its cache-local `source_manifest.json` beside the three clean tables
+and completion marker. It additionally binds the configured/resolved data root,
+official archive and selected-file SHA-256 hashes, Hugging Face revision, exact
+frame/agent selection, declared transforms (including unresolved values), split
+role, dataset/agent/split configuration hashes, package/contract/cache/code
+versions, producer command, and verified output hashes. The
+`resume.complete.json` marker binds the manifest and output hashes and is
+published only after Parquet verification.

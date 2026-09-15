@@ -75,15 +75,11 @@ agents:
     sensor_type: lidar
     odometry: not_applicable
     extrinsics:
-      from_frame: top
+      from_frame: raw_top_map
       to_frame: top
-      matrix_4x4:
-        - [1.0, 0.0, 0.0, 0.0]
-        - [0.0, 1.0, 0.0, 0.0]
-        - [0.0, 0.0, 1.0, 0.0]
-        - [0.0, 0.0, 0.0, 1.0]
-      status: verified
-      note: Frame identity only; dataset calibration remains an M2 prerequisite.
+      matrix_4x4: null
+      status: unresolved
+      note: Raw infrastructure map-to-common-top calibration is unresolved.
     nominal_coverage: *unresolved_coverage
     expected_point_fields: [x, y, z, intensity]
     expected_odometry_fields: []

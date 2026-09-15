@@ -1,5 +1,5 @@
 {
-  "agent_registry_sha256": "9341d18c3c97cb8ba07d615d19099253133925ecb8cd8637a1aaed5193a8faa9",
+  "agent_registry_sha256": "7c909333aee8f7ec78a2463ce951f585de0157fea14457c2cc459e921cc681ee",
   "artifact_layout": "experiment-sequence-variant-v1",
   "config_sha256": "9e484e0950a156811cda8cd5f4a61991550c73b084acf84385be44e9ad2e1c32",
   "contract_schema_version": "1.0.0",
@@ -8,8 +8,8 @@
   "schema_registry_sha256": "9b1cc706fdc31cd69cc47807e332869a4f3239467c26522b37dacc2a7af3cccb",
   "schema_version": "1.0.0",
   "source_manifest_sha256": [
-    "72275413218d3f60074cd6127f09e2af40df40a79cb74dc60427a90702c25dba",
-    "b9ba2246ce152c3bc529c922746e86ed6846b97a8acd519a76b01cef508b136a"
+    "6ae4f736a6d39d477fe5b59635b50a2ed7104f8dc1c080fce55790c98b11ec8b",
+    "a186c15df240bade555d08a80e33186f3b71a484f2674f894f3e6514034d037b"
   ],
   "split_registry_sha256": "f1664703b7232c2797b24a7a94307ecfaebff111c1037620a9ce71d2816421c9"
 }

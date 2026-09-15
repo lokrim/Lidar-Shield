@@ -1,6 +1,6 @@
 # Milestone status
 
-## Implemented: M0 and M1
+## Implemented: M0, M1, and M2
 
 - Distribution/import package and editable CLI installation.
 - Strict YAML configuration loading with explicit, config-relative paths.
@@ -16,12 +16,25 @@
 - Stage 1 split skeleton, unresolved-source guards, and provenance leakage checks.
 - Hash-bound source/experiment/schema manifests and deterministic M1 fixtures.
 - D0 nine-event synthetic timeline with no unavailable-event attrition.
+- Independent Mixed Signals odometry/PCD/TXT adapter with exact integer-time
+  and one-based-label-offset audits for the local official `mini_7` archive.
+- Config-gated transforms, yaw-box geometry, conservative visibility,
+  ten-midpoint-SLERP kinematic self-consistency, spatial measurements,
+  development-only two-sided count surprise, and leave-one-out corroboration.
+- Historical diagnostic and separately named unknown-aware fixed baselines.
+- Hash-stable verified clean Parquet cache, stale/incomplete resume rejection,
+  complete official-source manifest, and D1 five-agent playback.
 
 ## Intentionally not implemented
 
-M2 and later own official raw data, evidence engines, attacks, models, temporal state,
-communication/fusion, replay, evaluation, and reports. The CLI therefore exposes
-no commands for those capabilities in M1.
+M3 and later own attacks, learned models, temporal state, communication/fusion,
+scientific replay/evaluation, and reports. M5 owns the multi-sequence contextual
+normalizers; M2's fixed count reference is development-only.
+
+Authoritative sensor/map-to-top calibration and nominal coverage are still
+unavailable. Real transform-dependent spatial/visibility/corroboration evidence
+therefore remains explicitly unavailable; parsing, kinematics, caching, and
+known-coordinate checks are not blocked.
 
 Stage 2 detector dependencies remain unselected and isolated until M10's
 maintained-stack/checkpoint gate. Open3D is optional visualization only; PyTorch
