@@ -1,0 +1,85 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lidar-shield"
+version = "0.1.0"
+description = "Independent research foundations for trustworthy cooperative LiDAR"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = { text = "MIT" }
+authors = [{ name = "lidar-shield contributors" }]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "jinja2>=3.1.5,<4",
+  "matplotlib>=3.9.4,<4",
+  "numpy>=1.26.4,<3",
+  "numpy-quaternion>=2024.0.12,<2025",
+  "pandas>=2.2.3,<4",
+  "pyarrow>=18.1.0,<24",
+  "pydantic>=2.10.6,<3",
+  "pypcd4>=1.3.0,<2",
+  "pyyaml>=6.0.2,<7",
+  "scikit-learn>=1.6.1,<2",
+  "scipy>=1.13.1,<2",
+  "seaborn>=0.13.2,<1",
+]
+
+[project.optional-dependencies]
+trust-neural = ["torch>=2.5.1,<3"]
+visualization = ["open3d>=0.19.0,<0.20"]
+
+[dependency-groups]
+dev = [
+  "mypy>=1.14.1,<2",
+  "pytest>=8.3.4,<10",
+  "pytest-cov>=6.0.0,<8",
+  "ruff>=0.9.3,<1",
+  "types-pyyaml>=6.0.12.20241230,<7",
+]
+
+[project.scripts]
+lidar-shield = "lidar_shield.cli:entrypoint"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lidar_shield"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers --cov=lidar_shield --cov-report=term-missing --cov-fail-under=90"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["lidar_shield"]
+omit = ["*/__main__.py"]
+
+[tool.coverage.report]
+exclude_also = [
+  "if TYPE_CHECKING:",
+  "if __name__ == .__main__.:",
+]
+show_missing = true
+
+[tool.ruff]
+line-length = 88
+src = ["src", "tests"]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "N", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src", "tests"]
+strict = true
+ignore_missing_imports = true
+warn_unreachable = true

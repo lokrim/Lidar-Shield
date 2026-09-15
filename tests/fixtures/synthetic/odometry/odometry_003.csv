@@ -1,0 +1,3 @@
+%time,field.header.stamp,field.pose.pose.position.x,field.pose.pose.position.y,field.pose.pose.position.z,field.pose.pose.orientation.x,field.pose.pose.orientation.y,field.pose.pose.orientation.z,field.pose.pose.orientation.w,field.twist.twist.linear.x,field.twist.twist.linear.y,field.twist.twist.linear.z
+1700000000000000001,1700000000000000001,10.0,20.0,0.0,0.0,0.0,0.0,1.0,2.0,0.0,0.0
+1700000000100000001,1700000000100000001,10.2,20.0,0.0,0.0,0.0,0.0,1.0,2.0,0.0,0.0

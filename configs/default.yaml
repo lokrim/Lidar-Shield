@@ -1,0 +1,19 @@
+schema_version: "0.1.0"
+project:
+  distribution: lidar-shield
+  package: lidar_shield
+versions:
+  software: "0.1.0"
+  config_schema: "0.1.0"
+  manifest_schema: "0.1.0"
+  fixture_schema: "0.1.0"
+paths:
+  fixture_root: ../tests/fixtures
+  artifact_root: ../artifacts
+  report_root: ../reports
+reproducibility:
+  seed: 1729
+  hash_algorithm: sha256
+  stable_serialization: json-sort-keys-utf8-v1
+  stable_ordering: lexicographic-utf8-v1
+  deterministic_algorithms: true

@@ -1,0 +1,22 @@
+/planning
+/artifacts/*
+!/artifacts/README.md
+/.coverage
+/.mypy_cache/
+/.pytest_cache/
+/.ruff_cache/
+/.venv/
+/build/
+/dist/
+/*.egg-info/
+**/__pycache__/
+*.py[cod]
+.DS_Store
+
+# Generated reports are reproducible products, not source.
+/reports/figures/*
+!/reports/figures/README.md
+/reports/tables/*
+!/reports/tables/README.md
+/reports/model_cards/*
+!/reports/model_cards/README.md
