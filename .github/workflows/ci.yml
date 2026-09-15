@@ -26,6 +26,7 @@ jobs:
       - run: uv run pytest
       - run: uv run lidar-shield --version
       - run: uv run lidar-shield config validate --config configs/default.yaml
+      - run: uv run lidar-shield demo d0 --agents configs/agents/mixed_signals.yaml
 
   static:
     runs-on: ubuntu-latest

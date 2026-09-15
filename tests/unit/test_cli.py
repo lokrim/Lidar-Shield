@@ -7,6 +7,7 @@ from lidar_shield import __version__
 from lidar_shield.cli import build_parser, main
 
 FIXTURE_ROOT = Path(__file__).parents[1] / "fixtures" / "synthetic"
+PROJECT_ROOT = Path(__file__).parents[2]
 
 
 def test_help_lists_only_implemented_configuration_surface() -> None:
@@ -42,7 +43,7 @@ def test_config_validate_prints_machine_readable_summary(
     summary = json.loads(capsys.readouterr().out)
     assert result == 0
     assert summary["status"] == "valid"
-    assert summary["schema_version"] == "0.1.0"
+    assert summary["schema_version"] == "1.0.0"
     assert len(summary["config_hash"]) == 64
 
 
@@ -57,3 +58,32 @@ def test_config_validate_reports_error(capsys: pytest.CaptureFixture[str]) -> No
     )
     assert result == 2
     assert "configuration error:" in capsys.readouterr().err
+
+
+def test_d0_demo_is_stable_and_accounts_for_every_event(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    arguments = [
+        "demo",
+        "d0",
+        "--agents",
+        str(PROJECT_ROOT / "configs" / "agents" / "mixed_signals.yaml"),
+    ]
+    assert main(arguments) == 0
+    first = capsys.readouterr().out
+    assert main(arguments) == 0
+    second = capsys.readouterr().out
+    assert first == second
+    payload = json.loads(first)
+    assert payload["event_count"] == 9
+    assert set(payload["reason_counts"]) == {
+        "empty_scene",
+        "invalid_pose",
+        "late",
+        "matched",
+        "missing_message",
+        "not_member",
+        "out_of_range",
+        "stale",
+        "unmatched",
+    }

@@ -29,6 +29,7 @@ class VersionContract(_StrictModel):
     config_schema: str = Field(min_length=1)
     manifest_schema: str = Field(min_length=1)
     fixture_schema: str = Field(min_length=1)
+    contract_schema: str = Field(min_length=1)
 
 
 class PathContract(_StrictModel):
@@ -46,7 +47,7 @@ class ReproducibilityContract(_StrictModel):
 
 
 class ProjectConfig(_StrictModel):
-    schema_version: Literal["0.1.0"]
+    schema_version: Literal["1.0.0"]
     project: ProjectIdentity
     versions: VersionContract
     paths: PathContract

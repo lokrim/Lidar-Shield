@@ -1,7 +1,8 @@
 # Manifest and artifact convention
 
-The M0 JSON envelope is implemented by `lidar_shield.manifest.Manifest`. It is a
-domain-neutral foundation, not the M1 canonical frame/object schema.
+The domain-neutral JSON envelope is implemented by
+`lidar_shield.manifest.Manifest`. M1 adds typed `SourceManifest` and
+`ExperimentManifest` contracts without conflating them with frame/object rows.
 
 Required manifest data includes manifest and fixture schema versions, a stable
 experiment ID, artifact kind, an allowed origin (`synthetic`,
@@ -30,3 +31,6 @@ artifacts/<experiment_id>/
 Only `artifacts/README.md` is committed. Generated experiment contents are
 ignored. The synthetic fixture manifest demonstrates loading, stable ordering,
 expected values, exact byte sizes, and integrity checks without raw data.
+`manifests/contracts/m1_schema_registry.json`, `manifests/datasets/m1_*.json`,
+and `manifests/experiments/m1_contract_fixtures.json` bind the M1 schema,
+configuration registries, two synthetic sources, and producer command.

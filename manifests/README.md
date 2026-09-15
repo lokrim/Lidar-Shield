@@ -1,8 +1,8 @@
 # Committed manifest registry
 
-Future dataset, experiment, and model manifests may be committed here when the
-relevant milestone defines them. M0 defines the domain-neutral JSON envelope in
-[`docs/MANIFESTS.md`](../docs/MANIFESTS.md) and exercises it with the synthetic
+M1 commits its canonical schema registry, two synthetic source manifests, and a
+contract-fixture experiment manifest. M0's domain-neutral JSON envelope remains
+documented in [`docs/MANIFESTS.md`](../docs/MANIFESTS.md) and exercised by the
 fixture manifest under `tests/fixtures/synthetic/`.
 
 No historical repository or output manifest is accepted by this project.

@@ -1,0 +1,89 @@
+schema_version: "1.0.0"
+registry_id: mixed-signals-agents-v1
+dataset: mixed_signals
+agents:
+  - agent_id: "003"
+    agent_type: vehicle
+    sensor_type: lidar
+    odometry: required
+    extrinsics:
+      from_frame: sensor_003
+      to_frame: top
+      matrix_4x4: null
+      status: unresolved
+      note: Must be resolved from official calibration during M2.
+    nominal_coverage: &unresolved_coverage
+      horizontal_fov_deg: null
+      vertical_fov_deg: null
+      range_m: null
+      status: unresolved
+    expected_point_fields: [x, y, z, intensity]
+    expected_odometry_fields: &odometry_fields
+      - "%time"
+      - field.header.stamp
+      - field.pose.pose.position.x
+      - field.pose.pose.position.y
+      - field.pose.pose.position.z
+      - field.pose.pose.orientation.x
+      - field.pose.pose.orientation.y
+      - field.pose.pose.orientation.z
+      - field.pose.pose.orientation.w
+      - field.twist.twist.linear.x
+      - field.twist.twist.linear.y
+      - field.twist.twist.linear.z
+  - agent_id: "004"
+    agent_type: vehicle
+    sensor_type: lidar
+    odometry: required
+    extrinsics:
+      from_frame: sensor_004
+      to_frame: top
+      matrix_4x4: null
+      status: unresolved
+      note: Must be resolved from official calibration during M2.
+    nominal_coverage: *unresolved_coverage
+    expected_point_fields: [x, y, z, intensity]
+    expected_odometry_fields: *odometry_fields
+  - agent_id: dome
+    agent_type: infrastructure
+    sensor_type: lidar
+    odometry: not_applicable
+    extrinsics:
+      from_frame: dome
+      to_frame: top
+      matrix_4x4: null
+      status: unresolved
+      note: Must be resolved from official calibration during M2.
+    nominal_coverage: *unresolved_coverage
+    expected_point_fields: [x, y, z, intensity]
+    expected_odometry_fields: []
+  - agent_id: laser
+    agent_type: vehicle
+    sensor_type: lidar
+    odometry: required
+    extrinsics:
+      from_frame: sensor_laser
+      to_frame: top
+      matrix_4x4: null
+      status: unresolved
+      note: Must be resolved from official calibration during M2.
+    nominal_coverage: *unresolved_coverage
+    expected_point_fields: [x, y, z, intensity]
+    expected_odometry_fields: *odometry_fields
+  - agent_id: top
+    agent_type: infrastructure
+    sensor_type: lidar
+    odometry: not_applicable
+    extrinsics:
+      from_frame: top
+      to_frame: top
+      matrix_4x4:
+        - [1.0, 0.0, 0.0, 0.0]
+        - [0.0, 1.0, 0.0, 0.0]
+        - [0.0, 0.0, 1.0, 0.0]
+        - [0.0, 0.0, 0.0, 1.0]
+      status: verified
+      note: Frame identity only; dataset calibration remains an M2 prerequisite.
+    nominal_coverage: *unresolved_coverage
+    expected_point_fields: [x, y, z, intensity]
+    expected_odometry_fields: []

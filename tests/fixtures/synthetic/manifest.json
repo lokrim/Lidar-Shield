@@ -1,27 +1,27 @@
 {
   "artifact_kind": "fixture_set",
-  "config_sha256": "4ed582c0f5383a9607165b4f3889b35d9a17dab6ecc6d4dbd9cb95b4f32e7d9a",
+  "config_sha256": "749c0137179133a1b7a9b2f1de8ae757f41204e36f2e0b94fed513e197bc5357",
   "created_at_utc": "2026-09-15T00:00:00Z",
-  "experiment_id": "m0-synthetic-fixtures",
+  "experiment_id": "m1-synthetic-fixtures",
   "files": [
     {
-      "bytes": 502,
+      "bytes": 529,
       "expected": {
         "validation": "fails: negative seed and extra field"
       },
       "media_type": "application/yaml",
       "path": "config/invalid.yaml",
-      "sha256": "6783a5ac149d375d732600c9d0ffb1bf508e24fe0d7d9520a1953b0335e3ebb7"
+      "sha256": "9121980f7ea4812333c566dfed96206707a21889a92aef95362a5a6d8a47c5ef"
     },
     {
-      "bytes": 474,
+      "bytes": 501,
       "expected": {
         "seed": 1729,
         "validation": "passes"
       },
       "media_type": "application/yaml",
       "path": "config/valid.yaml",
-      "sha256": "4ed582c0f5383a9607165b4f3889b35d9a17dab6ecc6d4dbd9cb95b4f32e7d9a"
+      "sha256": "749c0137179133a1b7a9b2f1de8ae757f41204e36f2e0b94fed513e197bc5357"
     },
     {
       "bytes": 0,
@@ -45,6 +45,40 @@
       "media_type": "text/plain",
       "path": "labels/frame_000000.txt",
       "sha256": "dae860d238a54803ce7e6d69772d69bef2d7f8af754c7429857b4086d855fa47"
+    },
+    {
+      "bytes": 666,
+      "expected": {
+        "integer_nanoseconds": true,
+        "sequences": 2,
+        "string_ids": [
+          "003",
+          "003-suffix"
+        ]
+      },
+      "media_type": "application/json",
+      "path": "m1/contracts/identities.json",
+      "sha256": "183b65910524ce599e8a4487c4478e11e0142be659c98f087b11c7e844a48e22"
+    },
+    {
+      "bytes": 572,
+      "expected": {
+        "dynamic_membership": true,
+        "sequences": 2
+      },
+      "media_type": "application/json",
+      "path": "m1/membership/two_sequences.json",
+      "sha256": "b9fcb2a017fa833e099b9a552d631cd98868484927d9c6fb64c094fb60ce6378"
+    },
+    {
+      "bytes": 623,
+      "expected": {
+        "includes_first_last": true,
+        "includes_invalid_cases": true
+      },
+      "media_type": "application/json",
+      "path": "m1/poses/boundaries.json",
+      "sha256": "1b2b7344f038082cab22f37c54279baca0e227e29eb51d1f10ca72106e964f5b"
     },
     {
       "bytes": 471,
@@ -81,18 +115,19 @@
       "sha256": "187fd09c4f6ae24365e69a3d6d01dfc91ed5a496ca615cd99f5d9f33d9b6e7e7"
     }
   ],
-  "fixture_schema_version": "0.1.0",
-  "manifest_schema_version": "0.1.0",
+  "fixture_schema_version": "1.0.0",
+  "manifest_schema_version": "1.0.0",
   "origin": "synthetic",
-  "origin_description": "New tiny examples authored from the M0 written contracts; no historical source, dataset row, or precomputed output was used.",
+  "origin_description": "New tiny examples authored from the M0/M1 written contracts; no historical source, dataset row, or precomputed output was used.",
   "producer": {
     "command": "uv run python scripts/generate_synthetic_fixtures.py --output tests/fixtures/synthetic",
     "package_version": "0.1.0"
   },
   "schema_versions": {
-    "config": "0.1.0",
-    "fixture": "0.1.0",
-    "manifest": "0.1.0"
+    "config": "1.0.0",
+    "contract": "1.0.0",
+    "fixture": "1.0.0",
+    "manifest": "1.0.0"
   },
   "seed": 1729,
   "software_versions": {

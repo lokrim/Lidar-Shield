@@ -1,8 +1,16 @@
-# M0 verification record
+# M0/M1 verification record
 
 Verification is run with `scripts/verify_m0.sh`, which performs a frozen editable
 sync, CLI version/config smoke checks, dataset-free tests, Ruff lint/format, and
 mypy strict type checking.
+
+M1 adds `scripts/verify_m1.sh`, which also runs the D0 timeline and every M1
+contract, synchronization, geometry, split, leakage, fixture, and manifest check.
+
+- Local macOS arm64, CPython 3.12.13, 2026-09-15 (M1): passed. Observed 58
+  tests passing with 94.70% branch-aware coverage; frozen dependency check, D0,
+  Ruff lint/format, and strict mypy all passed. `uv build` produced the wheel and
+  source distribution with the M1 modules and no planning/historical tree.
 
 - Local macOS arm64, CPython 3.12.13, 2026-09-15: passed. Observed 22 tests
   passing with 94.58% branch-aware coverage; Ruff lint/format, strict mypy,

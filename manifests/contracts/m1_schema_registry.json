@@ -1,0 +1,57 @@
+{
+  "contracts": {
+    "evidence_envelope": {
+      "identity": "canonical-v1",
+      "nullable": [
+        "match_age_ns",
+        "object_id_or_local_index",
+        "pose_age_ns",
+        "pose_source_time_ns",
+        "source_time_ns",
+        "value"
+      ],
+      "schema_version": "1.0.0"
+    },
+    "experiment_manifest": {
+      "schema_version": "1.0.0"
+    },
+    "frame": {
+      "identity": "canonical-v1",
+      "nullable": [
+        "match_age_ns",
+        "object_id_or_local_index",
+        "pose_age_ns",
+        "pose_source_time_ns",
+        "source_time_ns"
+      ],
+      "schema_version": "1.0.0"
+    },
+    "object": {
+      "identity": "canonical-v1",
+      "nullable": [
+        "class_id",
+        "pose_age_ns",
+        "pose_source_time_ns"
+      ],
+      "schema_version": "1.0.0"
+    },
+    "source_manifest": {
+      "schema_version": "1.0.0"
+    }
+  },
+  "identity_fields": [
+    "experiment_id",
+    "variant_id",
+    "sequence_id",
+    "session_id",
+    "sync_frame_id",
+    "decision_time_ns",
+    "source_time_ns",
+    "agent_id",
+    "agent_type",
+    "object_id_or_local_index"
+  ],
+  "registry_id": "m1-canonical-contracts-v1",
+  "schema_version": "1.0.0",
+  "signed_age_convention": "decision_time_ns - source_time_ns"
+}

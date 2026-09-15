@@ -1,0 +1,29 @@
+{
+  "frames": [
+    {
+      "agents": {
+        "003": true,
+        "004": true,
+        "dome": true,
+        "laser": true,
+        "top": true
+      },
+      "sequence_id": "synthetic-sequence-a",
+      "session_id": "synthetic-session-a",
+      "sync_frame_id": 0
+    },
+    {
+      "agents": {
+        "003": true,
+        "004": false,
+        "dome": true,
+        "laser": false,
+        "top": true
+      },
+      "sequence_id": "synthetic-sequence-b",
+      "session_id": "synthetic-session-b",
+      "sync_frame_id": 0
+    }
+  ],
+  "schema_version": "1.0.0"
+}

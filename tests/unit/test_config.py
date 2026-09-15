@@ -15,7 +15,7 @@ def test_valid_config_resolves_explicit_paths() -> None:
     assert config.reproducibility.seed == 1729
     assert config.paths.fixture_root == FIXTURE_ROOT.parent.resolve()
     assert config_hash(config_path) == (
-        "4ed582c0f5383a9607165b4f3889b35d9a17dab6ecc6d4dbd9cb95b4f32e7d9a"
+        "749c0137179133a1b7a9b2f1de8ae757f41204e36f2e0b94fed513e197bc5357"
     )
 
 

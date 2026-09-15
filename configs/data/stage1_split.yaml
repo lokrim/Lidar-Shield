@@ -1,0 +1,13 @@
+schema_version: "1.0.0"
+registry_id: stage1-split-skeleton-v1
+status: scientific source IDs unresolved pending metadata-only selection in M5
+assignments:
+  - source_id: mixed-signals-train-mini_7
+    sequence_id: mini_7
+    role: regression_development
+    resolved: true
+    frozen: true
+unresolved_slots:
+  training: 4
+  calibration: 1
+  final_test: 2

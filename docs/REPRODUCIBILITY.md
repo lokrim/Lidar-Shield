@@ -17,7 +17,8 @@ M0 establishes these conventions for every later producer:
   UTF-8 with sorted keys, compact separators,
   no NaN/Infinity, and exactly one trailing newline
   (`json-sort-keys-utf8-v1`). Parquet becomes the typed table format in M1.
-- Hash explicitly named project inputs and outputs with SHA-256. Never scan,
+- Hash explicitly named project inputs and outputs with SHA-256. M1 source and
+  experiment manifests bind the schema, agent, split, and source hashes. Never scan,
   inventory, or hash historical repositories or teammate artifacts.
 - Treat completed artifact roots as immutable. A changed configuration, source,
   code revision, schema, or seed receives a new experiment ID.

@@ -1,4 +1,4 @@
-"""Command-line entry point for the implemented M0 surface."""
+"""Command-line entry point for configuration and contract verification."""
 
 from __future__ import annotations
 
@@ -9,12 +9,17 @@ from collections.abc import Sequence
 
 from lidar_shield import __version__
 from lidar_shield.config import ConfigurationError, config_hash, load_config
+from lidar_shield.data.index import IndexError, load_agent_registry
+from lidar_shield.demos.d0 import build_d0_payload
+from lidar_shield.manifest import canonical_json_bytes
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="lidar-shield",
-        description="Independent lidar-shield research tooling (M0 foundation)",
+        description=(
+            "Independent lidar-shield research tooling (M0 foundation + M1 contracts)"
+        ),
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
@@ -31,6 +36,17 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         help="explicit path to the YAML configuration",
     )
+
+    demo_parser = commands.add_parser("demo", help="dataset-free demonstrations")
+    demo_commands = demo_parser.add_subparsers(dest="demo_command")
+    d0_parser = demo_commands.add_parser(
+        "d0", help="replay the deterministic five-agent contract timeline"
+    )
+    d0_parser.add_argument(
+        "--agents",
+        required=True,
+        help="explicit path to the agent registry YAML",
+    )
     return parser
 
 
@@ -43,6 +59,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.command == "config" and args.config_command is None:
         parser.parse_args(["config", "--help"])
+    if args.command == "demo" and args.demo_command is None:
+        parser.parse_args(["demo", "--help"])
 
     if args.command == "config" and args.config_command == "validate":
         try:
@@ -58,6 +76,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             "status": "valid",
         }
         print(json.dumps(summary, sort_keys=True, separators=(",", ":")))
+        return 0
+
+    if args.command == "demo" and args.demo_command == "d0":
+        try:
+            registry = load_agent_registry(args.agents)
+        except IndexError as exc:
+            print(f"agent registry error: {exc}", file=sys.stderr)
+            return 2
+        sys.stdout.buffer.write(canonical_json_bytes(build_d0_payload(registry)))
         return 0
 
     parser.error("unsupported command")

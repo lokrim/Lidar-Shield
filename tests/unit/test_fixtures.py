@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 
 import numpy as np
@@ -40,3 +41,21 @@ def test_point_cloud_loads_through_verified_pypcd4_api() -> None:
 
     assert points.shape == (3, 4)
     np.testing.assert_allclose(points[:, 3], [3500.0, 1750.0, 0.0])
+
+
+def test_m1_fixture_identities_and_membership_cover_two_isolated_sequences() -> None:
+    identities = json.loads(
+        (FIXTURE_ROOT / "m1" / "contracts" / "identities.json").read_text()
+    )["identities"]
+    assert [item["sequence_id"] for item in identities] == [
+        "synthetic-sequence-a",
+        "synthetic-sequence-b",
+    ]
+    assert identities[0]["agent_id"] == "003"
+    assert isinstance(identities[0]["decision_time_ns"], int)
+    assert identities[1]["source_time_ns"] is None
+
+    frames = json.loads(
+        (FIXTURE_ROOT / "m1" / "membership" / "two_sequences.json").read_text()
+    )["frames"]
+    assert frames[0]["agents"] != frames[1]["agents"]

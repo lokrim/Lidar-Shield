@@ -1,0 +1,25 @@
+{
+  "identities": [
+    {
+      "agent_id": "003",
+      "decision_time_ns": 1700000000000000003,
+      "experiment_id": "m1-fixtures",
+      "sequence_id": "synthetic-sequence-a",
+      "session_id": "synthetic-session-a",
+      "source_time_ns": 1700000000000000001,
+      "sync_frame_id": 0,
+      "variant_id": "clean"
+    },
+    {
+      "agent_id": "003-suffix",
+      "decision_time_ns": 1700000001000000003,
+      "experiment_id": "m1-fixtures",
+      "sequence_id": "synthetic-sequence-b",
+      "session_id": "synthetic-session-b",
+      "source_time_ns": null,
+      "sync_frame_id": 0,
+      "variant_id": "clean"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

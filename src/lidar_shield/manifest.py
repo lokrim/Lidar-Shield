@@ -64,8 +64,8 @@ class FileRecord(_ManifestModel):
 
 
 class Manifest(_ManifestModel):
-    manifest_schema_version: Literal["0.1.0"]
-    fixture_schema_version: Literal["0.1.0"]
+    manifest_schema_version: Literal["0.1.0", "1.0.0"]
+    fixture_schema_version: Literal["0.1.0", "1.0.0"]
     experiment_id: str = Field(pattern=r"^[a-z0-9][a-z0-9._-]*$")
     artifact_kind: Literal["fixture_set", "experiment", "dataset", "model"]
     origin: Literal["synthetic", "official_dataset", "generated"]

@@ -20,7 +20,7 @@ def test_fixture_manifest_validates_and_verifies_all_listed_files() -> None:
     manifest = load_manifest(MANIFEST_PATH, verify_files=True)
 
     assert manifest.origin == "synthetic"
-    assert manifest.experiment_id == "m0-synthetic-fixtures"
+    assert manifest.experiment_id == "m1-synthetic-fixtures"
     assert [record.path for record in manifest.files] == sorted(
         record.path for record in manifest.files
     )

@@ -1,0 +1,19 @@
+{
+  "agent_registry_sha256": "9341d18c3c97cb8ba07d615d19099253133925ecb8cd8637a1aaed5193a8faa9",
+  "config_sha256": "9e484e0950a156811cda8cd5f4a61991550c73b084acf84385be44e9ad2e1c32",
+  "files": [
+    {
+      "bytes": 572,
+      "path": "tests/fixtures/synthetic/m1/membership/two_sequences.json",
+      "sha256": "b9fcb2a017fa833e099b9a552d631cd98868484927d9c6fb64c094fb60ce6378"
+    }
+  ],
+  "origin": "synthetic",
+  "schema_version": "1.0.0",
+  "sequence_id": "synthetic-sequence-b",
+  "session_id": "synthetic-session-b",
+  "source_id": "m1-synthetic-source-b",
+  "source_sha256": "1ee2ebdebc961dc0104eb1aff438b8bd6a0b9cfa245e05f58a0ae50470202b1c",
+  "split_registry_sha256": "f1664703b7232c2797b24a7a94307ecfaebff111c1037620a9ce71d2816421c9",
+  "split_role": "synthetic_development"
+}
