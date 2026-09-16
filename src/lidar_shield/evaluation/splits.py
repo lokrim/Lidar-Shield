@@ -91,7 +91,12 @@ class SplitRegistry(_StrictModel):
         assignment = self.assignment_for(sequence_id)
         allowed: dict[ScientificAction, frozenset[SplitRole]] = {
             ScientificAction.ATTACK_GENERATION: frozenset(
-                {SplitRole.TRAINING, SplitRole.CALIBRATION, SplitRole.FINAL_TEST}
+                {
+                    SplitRole.REGRESSION_DEVELOPMENT,
+                    SplitRole.TRAINING,
+                    SplitRole.CALIBRATION,
+                    SplitRole.FINAL_TEST,
+                }
             ),
             ScientificAction.NORMALIZER_FIT: frozenset({SplitRole.TRAINING}),
             ScientificAction.SUPERVISED_FIT: frozenset({SplitRole.TRAINING}),

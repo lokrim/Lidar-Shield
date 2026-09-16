@@ -10,6 +10,14 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from lidar_shield import __version__
+from lidar_shield.attacks.config import (
+    AttackConfigurationError,
+    build_velocity_manifest,
+    load_velocity_attack_config,
+)
+from lidar_shield.attacks.manifests import AttackManifestError, load_attack_manifest
+from lidar_shield.attacks.overlays import OverlayError
+from lidar_shield.attacks.runtime import run_kinematic_attack
 from lidar_shield.config import ConfigurationError, config_hash, load_config
 from lidar_shield.data.cache import (
     CacheBuildConfig,
@@ -20,6 +28,7 @@ from lidar_shield.data.cache import (
 from lidar_shield.data.index import IndexError, load_agent_registry
 from lidar_shield.demos.d0 import build_d0_payload
 from lidar_shield.demos.d1 import build_d1_payload
+from lidar_shield.demos.d3 import build_d3_payload
 from lidar_shield.manifest import canonical_json_bytes
 from lidar_shield.runtime.pipeline import IntegrationFixtureError, build_d2_payload
 
@@ -27,7 +36,7 @@ from lidar_shield.runtime.pipeline import IntegrationFixtureError, build_d2_payl
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="lidar-shield",
-        description="Independent lidar-shield research tooling (M0 foundation–M3)",
+        description="Independent lidar-shield research tooling (M0 foundation–M4)",
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
@@ -77,6 +86,35 @@ def build_parser() -> argparse.ArgumentParser:
     d2_parser.add_argument(
         "--fixture", required=True, help="explicit path to the M3 fixture JSON"
     )
+
+    attack_parser = commands.add_parser("attack", help="immutable M4 attacks")
+    attack_commands = attack_parser.add_subparsers(dest="attack_command")
+    attack_run = attack_commands.add_parser(
+        "run", help="validate and generate one immutable kinematic variant"
+    )
+    attack_run.add_argument("--manifest", required=True)
+    attack_run.add_argument("--data-root", required=True)
+    attack_run.add_argument("--clean-dir", required=True)
+    attack_run.add_argument("--artifact-root", default="artifacts")
+    attack_run.add_argument(
+        "--split-registry", default="configs/data/stage1_split.yaml"
+    )
+
+    d3_parser = demo_commands.add_parser(
+        "d3", help="build and replay the registered mini_7 M4 episode"
+    )
+    d3_parser.add_argument("--config", required=True)
+    d3_parser.add_argument("--data-root", default="data")
+    d3_parser.add_argument("--artifact-root", default="artifacts")
+    d3_parser.add_argument(
+        "--clean-dir", help="reuse one verified clean cache instead of building it"
+    )
+    d3_parser.add_argument("--frames", default="0:3")
+    d3_parser.add_argument(
+        "--agent-registry", default="configs/agents/mixed_signals.yaml"
+    )
+    d3_parser.add_argument("--split-registry", default="configs/data/stage1_split.yaml")
+    d3_parser.add_argument("--dataset-config", default="configs/data/mini_7.yaml")
     return parser
 
 
@@ -154,6 +192,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.parse_args(["demo", "--help"])
     if args.command == "cache" and args.cache_command is None:
         parser.parse_args(["cache", "--help"])
+    if args.command == "attack" and args.attack_command is None:
+        parser.parse_args(["attack", "--help"])
 
     if args.command == "config" and args.config_command == "validate":
         try:
@@ -185,6 +225,83 @@ def main(argv: Sequence[str] | None = None) -> int:
             payload = build_d2_payload(args.fixture)
         except IntegrationFixtureError as exc:
             print(f"integration fixture error: {exc}", file=sys.stderr)
+            return 2
+        sys.stdout.buffer.write(canonical_json_bytes(payload))
+        return 0
+
+    if args.command == "attack" and args.attack_command == "run":
+        try:
+            manifest = load_attack_manifest(args.manifest)
+            directory = run_kinematic_attack(
+                manifest,
+                data_root=args.data_root,
+                clean_dir=args.clean_dir,
+                artifact_root=args.artifact_root,
+                split_registry_path=args.split_registry,
+            )
+        except (AttackManifestError, OverlayError, ValueError) as exc:
+            print(f"attack error: {exc}", file=sys.stderr)
+            return 2
+        sys.stdout.buffer.write(
+            canonical_json_bytes(
+                {
+                    "status": "generated",
+                    "episode_id": manifest.episode_id,
+                    "variant_id": manifest.variant_id,
+                    "variant_dir": directory.as_posix(),
+                }
+            )
+        )
+        return 0
+
+    if args.command == "demo" and args.demo_command == "d3":
+        try:
+            attack_config = load_velocity_attack_config(args.config)
+            if args.clean_dir:
+                cache = verify_clean_cache(args.clean_dir)
+            else:
+                cache_config = CacheBuildConfig(
+                    data_root=Path(args.data_root),
+                    artifact_root=Path(args.artifact_root),
+                    experiment_id=attack_config.experiment_id,
+                    sequence_id=attack_config.sequence_id,
+                    selected_frames=_parse_frames(args.frames),
+                    selected_agents=("003", "004", "dome", "laser", "top"),
+                    agent_registry_path=Path(args.agent_registry),
+                    split_registry_path=Path(args.split_registry),
+                    dataset_config_path=Path(args.dataset_config),
+                    producer_command=shlex.join(
+                        ["lidar-shield", "demo", "d3", "--config", args.config]
+                    ),
+                )
+                cache = build_clean_cache(cache_config)
+            manifest = build_velocity_manifest(
+                attack_config,
+                config_path=args.config,
+                data_root=args.data_root,
+                clean_dir=cache.clean_dir,
+                split_registry_path=args.split_registry,
+                agent_registry_path=args.agent_registry,
+            )
+            variant = run_kinematic_attack(
+                manifest,
+                data_root=args.data_root,
+                clean_dir=cache.clean_dir,
+                artifact_root=args.artifact_root,
+                split_registry_path=args.split_registry,
+            )
+            payload = build_d3_payload(
+                manifest, clean_dir=cache.clean_dir, variant_dir=variant
+            )
+        except (
+            AttackConfigurationError,
+            AttackManifestError,
+            CacheError,
+            IndexError,
+            OverlayError,
+            ValueError,
+        ) as exc:
+            print(f"D3 error: {exc}", file=sys.stderr)
             return 2
         sys.stdout.buffer.write(canonical_json_bytes(payload))
         return 0

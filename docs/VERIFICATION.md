@@ -1,4 +1,4 @@
-# M0–M3 verification record
+# M0–M4 verification record
 
 Verification is run with `scripts/verify_m0.sh`, which performs a frozen editable
 sync, CLI version/config smoke checks, dataset-free tests, Ruff lint/format, and
@@ -14,6 +14,25 @@ verification.
 M3 adds `scripts/verify_m3.sh`, which prints the dataset-free D2 clean versus
 integration-corruption result and runs the complete test, lint, format, and
 strict-type gate. It writes no scientific experiment artifact.
+
+M4 adds `scripts/verify_m4.sh`, which runs D3 against registered local `mini_7`
+when available and always runs synthetic overlay, reload, dependency,
+source-integrity, episode, coverage, and quality gates.
+
+- Local macOS arm64, CPython 3.12.13, 2026-09-16 (M4): passed. Observed 107
+  tests passing and one optional archive-presence test skipped, with 90.45%
+  branch-aware coverage; Ruff and strict mypy passed. D3 reused the verified
+  two-frame `mini_7` clean cache because the extracted source remained present
+  while `data/train/mini_7.tar` was no longer locally available. It generated
+  a successful registered velocity-spike episode with manifest SHA-256
+  `7834ccfadfc034b9cc32bd8fde89025dc06255212a4e25065463780147f7984b`,
+  realized residual change `0.2135470861893952 m`, reproducible attacked
+  evidence SHA-256
+  `a0706a2edd3cc114d8318ea81b92c3b2e463881a9fccd73cf660cd7391eb5958`,
+  one unscreened coverage attempt, and four clean plus four attacked fusion
+  outcomes. Offline package build produced the wheel and source distribution;
+  the wheel contains M4 modules and no tests, raw data, artifacts, planning
+  tree, or historical dependency.
 
 - Local macOS arm64, CPython 3.12.13, 2026-09-15 (M3): passed. Observed 97
   tests passing and one optional real-data test skipped, with 91.45%

@@ -43,3 +43,11 @@ role, dataset/agent/split configuration hashes, package/contract/cache/code
 versions, producer command, and verified output hashes. The
 `resume.complete.json` marker binds the manifest and output hashes and is
 published only after Parquet verification.
+
+M4 introduces `attack_manifest.json` schema `1.0.0`. It binds complete
+episode/variant/source/target identity, split role, archive/selected-source/raw/
+clean-cache hashes, family parameters and units, seed, attacker knowledge,
+expected modality, and code/config/schema versions. Each immutable variant also
+contains one JSON or derived-PCD overlay, `evidence_delta.parquet`, and
+`realized_effect.json`. Failed and interrupted attempts use the same identity;
+completed variant IDs are never overwritten.

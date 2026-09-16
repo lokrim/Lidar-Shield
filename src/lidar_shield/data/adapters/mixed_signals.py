@@ -16,7 +16,7 @@ from pathlib import Path
 
 import numpy as np
 from numpy.typing import NDArray
-from pypcd4 import PointCloud  # type: ignore[attr-defined]
+from pypcd4 import Encoding, PointCloud  # type: ignore[attr-defined]
 
 
 class AdapterError(ValueError):
@@ -99,6 +99,14 @@ class PcdMetadata:
 class PointMeasurements:
     xyzi: NDArray[np.float32]
     normalized_intensity: NDArray[np.float32]
+    metadata: PcdMetadata
+
+
+@dataclass(frozen=True)
+class ProductionPointCloud:
+    """A PCD payload retaining the complete production storage contract."""
+
+    pc_data: np.ndarray
     metadata: PcdMetadata
 
 
@@ -399,3 +407,55 @@ def load_point_measurements(
     return PointMeasurements(
         xyzi=xyzi, normalized_intensity=normalized, metadata=metadata
     )
+
+
+def load_production_point_cloud(path: str | Path) -> ProductionPointCloud:
+    """Load every PCD field without coercing extra fields through float64."""
+
+    source = Path(path)
+    try:
+        cloud = PointCloud.from_path(source)
+    except (OSError, ValueError, TypeError) as exc:
+        raise AdapterError(f"cannot decode PCD {source}: {exc}") from exc
+    metadata = _pcd_metadata(cloud)
+    required = {"x", "y", "z", "intensity"}
+    if not required.issubset(metadata.fields):
+        raise AdapterError("production PCD must contain x, y, z, and intensity")
+    data = np.asarray(cloud.pc_data).copy()
+    if data.dtype.names != metadata.fields or len(data) != metadata.points:
+        raise AdapterError("structured PCD payload disagrees with its metadata")
+    return ProductionPointCloud(data, metadata)
+
+
+def save_production_point_cloud(cloud: ProductionPointCloud, path: str | Path) -> None:
+    """Serialize a derived PCD with original fields, dtypes, and encoding."""
+
+    destination = Path(path)
+    data = np.asarray(cloud.pc_data)
+    if data.ndim != 1 or data.dtype.names != cloud.metadata.fields:
+        raise AdapterError("structured point data must match declared PCD fields")
+    if len(data) != cloud.metadata.points:
+        raise AdapterError("structured point count must match PCD metadata")
+    try:
+        dtype_fields = data.dtype.fields
+        if dtype_fields is None:
+            raise AdapterError("production PCD requires a structured dtype")
+        metadata = PointCloud.from_points(
+            [data[name] for name in cloud.metadata.fields],
+            cloud.metadata.fields,
+            [dtype_fields[name][0] for name in cloud.metadata.fields],
+            cloud.metadata.counts,
+        ).metadata
+        metadata = metadata.model_copy(
+            update={
+                "width": cloud.metadata.width,
+                "height": cloud.metadata.height,
+                "points": cloud.metadata.points,
+                "data": Encoding(cloud.metadata.encoding),
+            }
+        )
+        PointCloud(metadata, data.copy()).save(
+            destination, encoding=Encoding(cloud.metadata.encoding)
+        )
+    except (OSError, TypeError, ValueError) as exc:
+        raise AdapterError(f"cannot encode PCD {destination}: {exc}") from exc

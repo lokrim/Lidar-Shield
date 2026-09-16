@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from lidar_shield import __version__
+from lidar_shield.attacks.config import VelocityAttackConfig
 from lidar_shield.cli import build_parser, main
 from lidar_shield.data.cache import CacheBuildResult, CacheError
 
@@ -14,7 +15,7 @@ PROJECT_ROOT = Path(__file__).parents[2]
 def test_help_lists_only_implemented_configuration_surface() -> None:
     help_text = build_parser().format_help()
     assert "config" in help_text
-    for future_command in ("data", "attack", "trust", "replay", "report"):
+    for future_command in ("data", "trust", "replay", "report"):
         assert f"{{{future_command}}}" not in help_text
 
 
@@ -184,3 +185,93 @@ def test_d2_cli_is_stable_and_reports_fixture_errors(
 
     assert main(["demo", "d2", "--fixture", str(tmp_path / "missing")]) == 2
     assert "integration fixture error:" in capsys.readouterr().err
+
+
+def test_attack_run_and_d3_cli_surfaces(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakeManifest:
+        episode_id = "episode"
+        variant_id = "variant"
+
+    fake_manifest = FakeManifest()
+    monkeypatch.setattr(
+        "lidar_shield.cli.load_attack_manifest", lambda _: fake_manifest
+    )
+    monkeypatch.setattr(
+        "lidar_shield.cli.run_kinematic_attack", lambda *args, **kwargs: tmp_path
+    )
+    assert (
+        main(
+            [
+                "attack",
+                "run",
+                "--manifest",
+                "manifest.json",
+                "--data-root",
+                "data",
+                "--clean-dir",
+                "clean",
+            ]
+        )
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out)["variant_id"] == "variant"
+
+    declaration = VelocityAttackConfig.model_validate(
+        {
+            "schema_version": "1.0.0",
+            "experiment_id": "d3",
+            "episode_id": "episode",
+            "variant_id": "variant",
+            "source_id": "source",
+            "sequence_id": "mini_7",
+            "session_id": "session",
+            "sync_frame_id": 1,
+            "sender_id": "003",
+            "severity": "high",
+            "attack_kind": "velocity_spike",
+            "delta_v_mps": [1.0, 0.0, 0.0],
+            "duration_samples": 1,
+            "seed": 1,
+            "attacker_knowledge": "source_only",
+        },
+        strict=False,
+    )
+    cache = CacheBuildResult(tmp_path / "clean", {}, "a" * 64, False)
+    monkeypatch.setattr(
+        "lidar_shield.cli.load_velocity_attack_config", lambda _: declaration
+    )
+    monkeypatch.setattr("lidar_shield.cli.build_clean_cache", lambda _: cache)
+    monkeypatch.setattr(
+        "lidar_shield.cli.build_velocity_manifest",
+        lambda *args, **kwargs: fake_manifest,
+    )
+    monkeypatch.setattr(
+        "lidar_shield.cli.build_d3_payload", lambda *args, **kwargs: {"demo": "D3"}
+    )
+    assert main(["demo", "d3", "--config", "attack.yaml"]) == 0
+    assert json.loads(capsys.readouterr().out) == {"demo": "D3"}
+
+    def fail_attack(*args: object, **kwargs: object) -> Path:
+        raise CacheError("blocked")
+
+    monkeypatch.setattr("lidar_shield.cli.run_kinematic_attack", fail_attack)
+    assert (
+        main(
+            [
+                "attack",
+                "run",
+                "--manifest",
+                "manifest.json",
+                "--data-root",
+                "data",
+                "--clean-dir",
+                "clean",
+            ]
+        )
+        == 2
+    )
+    assert "attack error:" in capsys.readouterr().err

@@ -1,6 +1,6 @@
 # Milestone status
 
-## Implemented: M0, M1, M2, and M3
+## Implemented: M0, M1, M2, M3, and M4
 
 - Distribution/import package and editable CLI installation.
 - Strict YAML configuration loading with explicit, config-relative paths.
@@ -36,11 +36,22 @@
   exact ego fallback, ego-absent abstention, and quality/uncertainty metadata.
 - D2 clean/integration-corruption comparison with analytically expected risk,
   state, byte, error, missing-row, companion, fallback, and abstention results.
+- First versioned M4 attack manifest and scientific episode/variant identity,
+  with split registration and exact raw/archive/cache hash validation.
+- Immutable velocity spike/drift and spatial point add/remove overlays,
+  deterministic seeds, collision rejection, and preserved failure/interruption
+  attempts.
+- Production-reloaded derived PCD checks retaining extra fields, dtypes, counts,
+  and encoding for vehicle and infrastructure (`dome`) conventions.
+- Incremental adjacent-interval, overlapping-box, peer-group, and honest-peer
+  dependency expansion using the shared M2 geometry/evidence functions.
+- Evidence deltas, separate intended/injected/realized effects, unscreened
+  coverage summaries, and episode-linked clean-versus-attacked D3 replay.
 
 ## Intentionally not implemented
 
-M4 and later own scientific attacks, learned models, scientific replay/evaluation,
-and reports. M5 owns the multi-sequence contextual normalizers; M2's fixed count
+M5 and later own learned models and multi-sequence scientific evaluation and
+reports. M5 owns the multi-sequence contextual normalizers; M2's fixed count
 reference is development-only. M7 owns elapsed-time accumulation and full
 hysteretic quarantine/recovery. M8 owns tiered/soft/budget scheduling and robust
 fusion. M3's corruption stays test-only and scientifically ineligible.

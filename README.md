@@ -5,7 +5,7 @@ studying sender trust, temporal assurance, communication, and robust fusion in
 the Mixed Signals V2X setting. The distribution and CLI are `lidar-shield`; the
 Python import package is `lidar_shield`.
 
-Milestones 0 through 3 are implemented. In addition to the clean package foundation,
+Milestones 0 through 4 are implemented. In addition to the clean package foundation,
 M1 provides canonical frame/object/evidence contracts, exact-time matching,
 bounded pose and rigid-frame primitives, configured agent capabilities and
 membership, split/leakage controls, versioned manifests, deterministic contract
@@ -14,9 +14,11 @@ evidence, fixed baselines, a verified clean Parquet cache, and D1. Authoritative
 cross-agent calibration remains unavailable, so affected real spatial evidence
 is explicit unknown—not a fabricated transform. M3 adds the thin unknown-aware
 risk → EWMA/state → exact-byte communication → proxy-fusion → integration-metrics
-runtime and its disposable D2 fixture. Learned models, scientific attacks,
-calibrated temporal control, optimized communication/robust fusion, and
-scientific evaluation remain later milestones.
+runtime and its disposable D2 fixture. M4 adds the first versioned scientific
+attack manifests, immutable spike/drift and point add/remove overlays,
+incremental dependency recomputation, realized-effect/coverage accounting, and
+episode-linked final-pipeline replay. Learned models, contextual normalizers,
+calibrated temporal control, and optimized communication/robust fusion remain.
 
 ## Clean setup
 
@@ -54,6 +56,7 @@ scripts/verify_m0.sh
 scripts/verify_m1.sh
 scripts/verify_m2.sh
 scripts/verify_m3.sh
+scripts/verify_m4.sh
 ```
 
 Or run its parts:
@@ -113,8 +116,9 @@ handling, split registration, and contract fixtures. See
 [the M1 contract](docs/M1_CONTRACTS.md). Official raw archive processing starts
 in M2; see [the M2 evidence/cache contract](docs/M2_MINI7.md). M3's executable
 baseline and strict non-scientific fixture boundary are documented in
-[the walking-skeleton contract](docs/M3_WALKING_SKELETON.md). Later milestones
-add scientific attacks, learned/calibrated models, advanced temporal control,
+[the walking-skeleton contract](docs/M3_WALKING_SKELETON.md) and
+[the M4 attack contract](docs/M4_ATTACKS.md). Later milestones add
+learned/calibrated models, advanced temporal control,
 optimized communication/robust fusion, and locked reports. Detector/BEV work is
 an optional, gated M10 extension. See [milestone status](docs/MILESTONE_STATUS.md).
 

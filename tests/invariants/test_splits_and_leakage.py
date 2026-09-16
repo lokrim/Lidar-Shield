@@ -79,8 +79,9 @@ def test_split_skeleton_registers_only_mini_7_and_hashes_exact_bytes() -> None:
     assert len(digest) == 64
     with pytest.raises(SplitError, match="unresolved"):
         registry.assignment_for("not-selected")
+    registry.assert_allowed("mini_7", ScientificAction.ATTACK_GENERATION)
     with pytest.raises(SplitError, match="not allowed"):
-        registry.assert_allowed("mini_7", ScientificAction.ATTACK_GENERATION)
+        registry.assert_allowed("mini_7", ScientificAction.NORMALIZER_FIT)
 
 
 def test_scientific_actions_follow_frozen_roles() -> None:

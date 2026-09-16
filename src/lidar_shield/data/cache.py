@@ -50,7 +50,12 @@ from lidar_shield.evidence.spatial import (
 from lidar_shield.geometry.boxes import YawBox
 from lidar_shield.geometry.frames import resolve_extrinsics
 from lidar_shield.geometry.visibility import visibility_eligibility
-from lidar_shield.manifest import canonical_json_bytes, sha256_bytes, sha256_file
+from lidar_shield.manifest import (
+    canonical_json_bytes,
+    production_code_sha256,
+    sha256_bytes,
+    sha256_file,
+)
 from lidar_shield.trust.fixed_baseline import (
     historical_fixed_baseline,
     raw_point_share,
@@ -241,7 +246,7 @@ def _request_manifest(
         "transforms": transform_records,
         "versions": {
             "package": __version__,
-            "production_code_sha256": _production_code_sha256(),
+            "production_code_sha256": production_code_sha256(),
             "contract_schema": CONTRACT_SCHEMA_VERSION,
             "cache_schema": "2.0.0",
             "dataset_config_schema": str(declaration.get("schema_version")),
@@ -260,18 +265,6 @@ def _fingerprint(request: dict[str, Any]) -> str:
         key: value for key, value in request.items() if key != "producer_command"
     }
     return sha256_bytes(canonical_json_bytes(compatible_request))
-
-
-def _production_code_sha256() -> str:
-    package_root = Path(__file__).parents[1]
-    records = [
-        {
-            "path": path.relative_to(package_root).as_posix(),
-            "sha256": sha256_file(path),
-        }
-        for path in sorted(package_root.rglob("*.py"))
-    ]
-    return sha256_bytes(canonical_json_bytes(records))
 
 
 def _frame_record(

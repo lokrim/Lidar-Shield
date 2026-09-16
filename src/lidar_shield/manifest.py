@@ -46,6 +46,20 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
+def production_code_sha256(package_root: str | Path | None = None) -> str:
+    """Hash the stable path/content inventory of this production package."""
+
+    root = Path(package_root).resolve() if package_root else Path(__file__).parent
+    records = [
+        {
+            "path": path.relative_to(root).as_posix(),
+            "sha256": sha256_file(path),
+        }
+        for path in sorted(root.rglob("*.py"))
+    ]
+    return sha256_bytes(canonical_json_bytes(records))
+
+
 class _ManifestModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
 

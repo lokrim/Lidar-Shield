@@ -1,0 +1,15 @@
+schema_version: "1.0.0"
+experiment_id: m4-mini7-d3
+episode_id: mini7-frame-1-agent-003-velocity
+variant_id: velocity-spike-severe-seed-1729
+source_id: mixed-signals-train-mini_7
+sequence_id: mini_7
+session_id: mini_7-session
+sync_frame_id: 1
+sender_id: "003"
+severity: severe
+attack_kind: velocity_spike
+delta_v_mps: [4.0, -2.0, 0.5]
+duration_samples: 1
+seed: 1729
+attacker_knowledge: source_only

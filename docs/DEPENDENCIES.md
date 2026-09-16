@@ -53,3 +53,9 @@ M3 rechecked the official Pydantic v2 interface through Context7 on 2026-09-15,
 including frozen `ConfigDict` models, model validators, JSON-mode dumps, and
 JSON serialization. M3 adds no dependency: the runtime uses existing Pydantic
 contracts plus standard-library dataclasses, JSON, hashing, and tuple arithmetic.
+
+M4 rechecked current pypcd4 documentation through Context7 on 2026-09-16. The
+verified API is `PointCloud.from_points(points, fields, types, count)` plus
+`save(..., encoding=Encoding(...))`. M4 uses structured `pc_data` and copied
+metadata so derived clouds preserve arbitrary extra fields and dtypes rather
+than coercing them through XYZI. No new dependency was added.
