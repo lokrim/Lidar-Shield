@@ -1,0 +1,258 @@
+{
+  "fixture_schema_version": "1.0.0",
+  "fixture_run_id": "m3-d2-fixture-v1",
+  "source_id": "synthetic-m3-fixture",
+  "sequence_id": "synthetic-sequence-m3",
+  "session_id": "synthetic-session-m3",
+  "seed": 1729,
+  "ego_agent_id": "ego",
+  "ewma": {
+    "alpha": 0.3,
+    "threshold": 0.25,
+    "initial_value": null,
+    "missing_evidence_policy": "hold_prior_mark_unknown"
+  },
+  "max_source_age_ns": 100,
+  "frames": [
+    {
+      "sync_frame_id": 0,
+      "decision_time_ns": 1000,
+      "clean_reference": [1.0, 1.0],
+      "observations": [
+        {
+          "agent_id": "ego",
+          "source_time_ns": 1000,
+          "is_ego": true,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [0.0, 0.0],
+          "pose": {"frame_id": "top", "xyz_m": [0.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-0",
+          "local_confidence": 1.0,
+          "quality_score": 1.0,
+          "reason_code": "matched"
+        },
+        {
+          "agent_id": "remote-corrupted",
+          "source_time_ns": 990,
+          "is_ego": false,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [1.0, 1.0],
+          "pose": {"frame_id": "top", "xyz_m": [1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-0",
+          "local_confidence": 0.9,
+          "quality_score": 0.9,
+          "reason_code": "matched"
+        },
+        {
+          "agent_id": "remote-companion",
+          "source_time_ns": 995,
+          "is_ego": false,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [2.0, 2.0],
+          "pose": {"frame_id": "top", "xyz_m": [-1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-0",
+          "local_confidence": 0.8,
+          "quality_score": 0.8,
+          "reason_code": "matched"
+        }
+      ]
+    },
+    {
+      "sync_frame_id": 1,
+      "decision_time_ns": 2000,
+      "clean_reference": [1.0, 1.0],
+      "observations": [
+        {
+          "agent_id": "ego",
+          "source_time_ns": 2000,
+          "is_ego": true,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [0.0, 0.0],
+          "pose": {"frame_id": "top", "xyz_m": [0.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-0",
+          "local_confidence": 1.0,
+          "quality_score": 1.0,
+          "reason_code": "matched"
+        },
+        {
+          "agent_id": "remote-corrupted",
+          "source_time_ns": 1990,
+          "is_ego": false,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [1.0, 1.0],
+          "pose": {"frame_id": "top", "xyz_m": [1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-0",
+          "local_confidence": 0.9,
+          "quality_score": 0.9,
+          "reason_code": "matched"
+        },
+        {
+          "agent_id": "remote-companion",
+          "source_time_ns": 1995,
+          "is_ego": false,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [2.0, 2.0],
+          "pose": {"frame_id": "top", "xyz_m": [-1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-0",
+          "local_confidence": 0.8,
+          "quality_score": 0.8,
+          "reason_code": "matched"
+        }
+      ]
+    },
+    {
+      "sync_frame_id": 2,
+      "decision_time_ns": 3000,
+      "clean_reference": [0.5, -0.5],
+      "observations": [
+        {
+          "agent_id": "ego",
+          "source_time_ns": 3000,
+          "is_ego": true,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [0.5, -0.5],
+          "pose": {"frame_id": "top", "xyz_m": [0.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-1",
+          "local_confidence": 1.0,
+          "quality_score": 1.0,
+          "reason_code": "matched"
+        },
+        {
+          "agent_id": "remote-corrupted",
+          "source_time_ns": null,
+          "is_ego": false,
+          "message_present": false,
+          "kinematic_error_m": null,
+          "two_sided_count_residual": null,
+          "peer_corroboration_score": null,
+          "kinematic_applicable": true,
+          "vector": null,
+          "pose": {"frame_id": "top", "xyz_m": [1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-1",
+          "local_confidence": 0.0,
+          "quality_score": 0.0,
+          "reason_code": "missing_message"
+        },
+        {
+          "agent_id": "remote-companion",
+          "source_time_ns": null,
+          "is_ego": false,
+          "message_present": false,
+          "kinematic_error_m": null,
+          "two_sided_count_residual": null,
+          "peer_corroboration_score": null,
+          "kinematic_applicable": true,
+          "vector": null,
+          "pose": {"frame_id": "top", "xyz_m": [-1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-1",
+          "local_confidence": 0.0,
+          "quality_score": 0.0,
+          "reason_code": "missing_message"
+        }
+      ]
+    },
+    {
+      "sync_frame_id": 3,
+      "decision_time_ns": 4000,
+      "clean_reference": [0.0, 0.0],
+      "observations": [
+        {
+          "agent_id": "ego",
+          "source_time_ns": null,
+          "is_ego": true,
+          "message_present": false,
+          "kinematic_error_m": null,
+          "two_sided_count_residual": null,
+          "peer_corroboration_score": null,
+          "kinematic_applicable": true,
+          "vector": null,
+          "pose": {"frame_id": "top", "xyz_m": [0.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-2",
+          "local_confidence": 0.0,
+          "quality_score": 0.0,
+          "reason_code": "missing_message"
+        },
+        {
+          "agent_id": "remote-corrupted",
+          "source_time_ns": 3990,
+          "is_ego": false,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [0.0, 0.0],
+          "pose": {"frame_id": "top", "xyz_m": [1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-2",
+          "local_confidence": 0.9,
+          "quality_score": 0.9,
+          "reason_code": "matched"
+        },
+        {
+          "agent_id": "remote-companion",
+          "source_time_ns": 3995,
+          "is_ego": false,
+          "message_present": true,
+          "kinematic_error_m": 0.0,
+          "two_sided_count_residual": 0.0,
+          "peer_corroboration_score": 1.0,
+          "kinematic_applicable": true,
+          "vector": [0.0, 0.0],
+          "pose": {"frame_id": "top", "xyz_m": [-1.0, 0.0, 0.0], "yaw_rad": 0.0},
+          "region_or_object_key": "region-2",
+          "local_confidence": 0.8,
+          "quality_score": 0.8,
+          "reason_code": "matched"
+        }
+      ]
+    }
+  ],
+  "integration_corruption": {
+    "label": "integration_corruption_fixture",
+    "seed": 1729,
+    "target_sync_frame_id": 1,
+    "target_agent_id": "remote-corrupted",
+    "replacement": {
+      "kinematic_error_m": 0.057,
+      "two_sided_count_residual": 3.0,
+      "peer_corroboration_score": 0.0,
+      "vector": [8.0, 8.0]
+    },
+    "scientific_eligibility": "none"
+  },
+  "analytical_expectations": {
+    "target_clean_risk": 0.0,
+    "target_corrupted_risk": 1.0,
+    "target_corrupted_ewma": 0.3,
+    "target_corrupted_state": "quarantined",
+    "hard_gate_corrupted_source_bytes": 0
+  }
+}

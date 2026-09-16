@@ -48,3 +48,8 @@ after writing.
 `torch` is locked only through the `trust-neural` extra and `open3d` only through
 the `visualization` extra; neither was installed in the local M0 base smoke.
 Detector dependencies are deliberately unselected until the M10 gate.
+
+M3 rechecked the official Pydantic v2 interface through Context7 on 2026-09-15,
+including frozen `ConfigDict` models, model validators, JSON-mode dumps, and
+JSON serialization. M3 adds no dependency: the runtime uses existing Pydantic
+contracts plus standard-library dataclasses, JSON, hashing, and tuple arithmetic.

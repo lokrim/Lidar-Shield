@@ -166,3 +166,21 @@ def test_cache_cli_verification_and_errors(
         == 2
     )
     assert "--frames" in capsys.readouterr().err
+
+
+def test_d2_cli_is_stable_and_reports_fixture_errors(
+    capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
+    fixture = PROJECT_ROOT / "tests" / "fixtures" / "m3" / "integration_fixture.json"
+    arguments = ["demo", "d2", "--fixture", str(fixture)]
+    assert main(arguments) == 0
+    first = capsys.readouterr().out
+    assert main(arguments) == 0
+    second = capsys.readouterr().out
+    assert first == second
+    payload = json.loads(first)
+    assert payload["demo"] == "D2"
+    assert payload["scientific_eligibility"] == "none"
+
+    assert main(["demo", "d2", "--fixture", str(tmp_path / "missing")]) == 2
+    assert "integration fixture error:" in capsys.readouterr().err

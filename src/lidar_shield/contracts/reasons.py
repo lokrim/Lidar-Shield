@@ -56,6 +56,9 @@ class ReasonCode(str, Enum):
     NONPOSITIVE_DT = "nonpositive_dt"
     EXCESSIVE_GAP = "excessive_gap"
     INCOMPLETE_EVIDENCE = "incomplete_evidence"
+    INVALID_INTEGRITY = "invalid_integrity"
+    HARD_GATED = "hard_gated"
+    ADMITTED = "admitted"
 
 
 UNAVAILABLE_SOURCE_REASONS = frozenset(

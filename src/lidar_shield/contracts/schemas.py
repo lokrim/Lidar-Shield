@@ -387,6 +387,240 @@ class ExperimentManifest(_StrictModel):
         return self
 
 
+class IntegrationFrameIdentity(_StrictModel):
+    """Non-scientific M3 fixture identity carried through every runtime stage."""
+
+    schema_version: Literal["1.0.0"] = CONTRACT_SCHEMA_VERSION
+    fixture_run_id: Identifier
+    fixture_case: Literal["clean", "integration_corruption"]
+    source_id: Identifier
+    sequence_id: Identifier
+    session_id: Identifier
+    sync_frame_id: int = Field(ge=0)
+    decision_time_ns: int = Field(ge=0)
+
+
+class IntegrationSenderIdentity(IntegrationFrameIdentity):
+    agent_id: Identifier
+    source_time_ns: int | None = Field(default=None, ge=0)
+
+
+class PredictionRecord(IntegrationSenderIdentity):
+    """Final prediction interface, with M6 calibration fields reserved."""
+
+    model_id: Identifier
+    risk_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    risk_semantics: Literal[
+        "uncalibrated_attack_risk_score", "calibrated_attack_probability"
+    ]
+    calibration_status: Literal["uncalibrated", "calibrated"]
+    calibrated_p_attack: float | None = Field(default=None, ge=0.0, le=1.0)
+    operational_reliability: float | None = Field(default=None, ge=0.0, le=1.0)
+    predictive_uncertainty: float | None = Field(default=None, ge=0.0)
+    uncertainty_available: bool
+    evidence_available: bool
+    abstained: bool
+    reason_code: ReasonCode
+
+    @model_validator(mode="after")
+    def validate_prediction_semantics(self) -> PredictionRecord:
+        if (self.risk_score is None) != (self.operational_reliability is None):
+            raise ValueError("risk and operational reliability must coexist")
+        if self.risk_score is not None and not math.isclose(
+            self.operational_reliability or 0.0,
+            1.0 - self.risk_score,
+            abs_tol=1e-12,
+        ):
+            raise ValueError("operational reliability must equal one minus risk")
+        if self.uncertainty_available != (self.predictive_uncertainty is not None):
+            raise ValueError("uncertainty availability must match its value")
+        if self.abstained != (self.risk_score is None):
+            raise ValueError("abstention must match unavailable risk")
+        if self.calibration_status == "uncalibrated":
+            if (
+                self.calibrated_p_attack is not None
+                or self.risk_semantics != "uncalibrated_attack_risk_score"
+            ):
+                raise ValueError("uncalibrated predictions cannot expose p_attack")
+        elif (
+            self.calibrated_p_attack is None
+            or self.risk_semantics != "calibrated_attack_probability"
+        ):
+            raise ValueError("calibrated predictions require probability semantics")
+        elif self.risk_score is None or not math.isclose(
+            self.calibrated_p_attack, self.risk_score, abs_tol=1e-12
+        ):
+            raise ValueError("calibrated p_attack must equal the operational risk")
+        return self
+
+
+class StateTransitionRecord(IntegrationSenderIdentity):
+    """Auditable M3 threshold-only EWMA transition."""
+
+    input_risk_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    input_available: bool
+    ewma_risk_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    alpha: float = Field(gt=0.0, le=1.0)
+    threshold: float = Field(ge=0.0, le=1.0)
+    initialization: Literal["first_available", "configured_value"]
+    missing_evidence_policy: Literal["hold_prior_mark_unknown"]
+    previous_state: Literal["normal", "quarantined", "unknown"]
+    current_state: Literal["normal", "quarantined", "unknown"]
+    transition_reason: Identifier
+    controller_kind: Literal["threshold_only_ewma"] = "threshold_only_ewma"
+    full_hysteretic_controller_deferred: Literal[True] = True
+
+    @model_validator(mode="after")
+    def validate_state_input(self) -> StateTransitionRecord:
+        if self.input_available != (self.input_risk_score is not None):
+            raise ValueError("state input availability must match input risk")
+        return self
+
+
+class PoseDescriptor(_StrictModel):
+    frame_id: Identifier
+    xyz_m: tuple[float, float, float] = Field(strict=False)
+    yaw_rad: float
+
+    @model_validator(mode="after")
+    def finite_pose(self) -> PoseDescriptor:
+        if not all(math.isfinite(value) for value in (*self.xyz_m, self.yaw_rad)):
+            raise ValueError("packet pose must be finite")
+        return self
+
+
+class IntegrityMetadata(_StrictModel):
+    algorithm: Literal["sha256"]
+    payload_sha256: Sha256
+    serialization: Literal["canonical-json-sort-keys-utf8-v1"]
+
+
+class MessageDescriptor(IntegrationSenderIdentity):
+    """Versioned deterministic proxy-message descriptor."""
+
+    sender_id: Identifier
+    pose: PoseDescriptor
+    region_or_object_key: ObjectKey
+    payload_type: Literal["aligned_proxy_vector"]
+    local_confidence: float = Field(ge=0.0, le=1.0)
+    integrity: IntegrityMetadata
+    measured_size_bytes: int = Field(gt=0)
+
+    @model_validator(mode="after")
+    def sender_matches_identity(self) -> MessageDescriptor:
+        if self.sender_id != self.agent_id:
+            raise ValueError("descriptor sender_id must match agent_id")
+        if self.source_time_ns is None:
+            raise ValueError("packets require source_time_ns")
+        return self
+
+
+class ProxyPacket(_StrictModel):
+    descriptor: MessageDescriptor
+    payload: tuple[float, ...] = Field(min_length=1, strict=False)
+    packet_sha256: Sha256
+
+    @field_validator("payload")
+    @classmethod
+    def finite_payload(cls, value: tuple[float, ...]) -> tuple[float, ...]:
+        if not all(math.isfinite(item) for item in value):
+            raise ValueError("proxy payload must be finite")
+        return value
+
+
+class ScheduleRecord(IntegrationSenderIdentity):
+    policy: Literal["full_share", "hard_gate"]
+    packet_sha256: Sha256
+    measured_size_bytes: int = Field(gt=0)
+    max_source_age_ns: int = Field(ge=0)
+    source_age_ns: int
+    integrity_valid: bool
+    admitted: bool
+    admitted_bytes: int = Field(ge=0)
+    reason_code: ReasonCode
+
+    @model_validator(mode="after")
+    def validate_schedule_decision(self) -> ScheduleRecord:
+        expected = self.measured_size_bytes if self.admitted else 0
+        if self.admitted_bytes != expected:
+            raise ValueError("admitted bytes must match the packet decision")
+        if self.source_time_ns is None:
+            raise ValueError("scheduled packets require source_time_ns")
+        return self
+
+
+class ContributorSource(IntegrationSenderIdentity):
+    is_ego: bool
+
+
+class FusionResult(IntegrationFrameIdentity):
+    policy: Literal["full_share", "hard_gate", "ego_only"]
+    fused_vector: tuple[float, ...] | None = Field(default=None, strict=False)
+    abstained: bool
+    degraded: bool
+    reason: Literal["cooperative", "ego_only_fallback", "ego_absent"]
+    contributors: tuple[ContributorSource, ...] = Field(strict=False)
+    contributor_count: int = Field(ge=0)
+    remote_contributor_count: int = Field(ge=0)
+    total_remote_weight: float = Field(ge=0.0, le=1.0)
+    quality_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    predictive_uncertainty: float | None = Field(default=None, ge=0.0)
+    uncertainty_available: bool
+
+    @model_validator(mode="after")
+    def validate_fusion_result(self) -> FusionResult:
+        if self.abstained != (self.fused_vector is None):
+            raise ValueError("fusion abstention must match absent output")
+        if self.contributor_count != len(self.contributors):
+            raise ValueError("contributor count must match contributor identities")
+        remote_count = sum(not item.is_ego for item in self.contributors)
+        if self.remote_contributor_count != remote_count:
+            raise ValueError("remote contributor count is inconsistent")
+        if self.uncertainty_available != (self.predictive_uncertainty is not None):
+            raise ValueError("fusion uncertainty availability must match its value")
+        if self.reason == "ego_absent" and not self.abstained:
+            raise ValueError("ego absence requires abstention")
+        if self.reason == "ego_only_fallback" and not self.degraded:
+            raise ValueError("ego-only fallback must be degraded")
+        return self
+
+
+class EvaluationRunMetrics(IntegrationFrameIdentity):
+    """Minimal M3 integration report; not a scientific attack metric."""
+
+    policy: Literal["full_share", "hard_gate", "ego_only"]
+    observation_sources: tuple[ContributorSource, ...] = Field(strict=False)
+    observation_count: int = Field(ge=0)
+    missing_observation_count: int = Field(ge=0)
+    prediction_available_count: int = Field(ge=0)
+    abstention_count: int = Field(ge=0)
+    maximum_uncalibrated_risk: float | None = Field(default=None, ge=0.0, le=1.0)
+    state_counts: dict[str, int]
+    admitted_bytes: int = Field(ge=0)
+    corrupted_source_bytes: int = Field(ge=0)
+    proxy_reconstruction_error: float | None = Field(default=None, ge=0.0)
+    proxy_utility: float | None = Field(default=None, ge=0.0, le=1.0)
+    fallback: bool
+    fusion_abstained: bool
+    reference_scope: Literal["evaluation_only_clean_fixture"]
+    scientific_eligibility: Literal["none"] = "none"
+
+    @model_validator(mode="after")
+    def validate_metric_counts(self) -> EvaluationRunMetrics:
+        if self.observation_count != len(self.observation_sources):
+            raise ValueError("observation count must preserve every source row")
+        if (
+            self.prediction_available_count + self.abstention_count
+            != self.observation_count
+        ):
+            raise ValueError("prediction counts must cover all observations")
+        if self.corrupted_source_bytes > self.admitted_bytes:
+            raise ValueError("corrupted-source bytes cannot exceed admitted bytes")
+        if (self.proxy_reconstruction_error is None) != (self.proxy_utility is None):
+            raise ValueError("proxy error and utility must coexist")
+        return self
+
+
 class ObjectSource(Protocol):
     """Common Stage 1/Stage 2 object-source boundary."""
 

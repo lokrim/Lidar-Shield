@@ -21,12 +21,13 @@ from lidar_shield.data.index import IndexError, load_agent_registry
 from lidar_shield.demos.d0 import build_d0_payload
 from lidar_shield.demos.d1 import build_d1_payload
 from lidar_shield.manifest import canonical_json_bytes
+from lidar_shield.runtime.pipeline import IntegrationFixtureError, build_d2_payload
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="lidar-shield",
-        description="Independent lidar-shield research tooling (M0 foundation–M2)",
+        description="Independent lidar-shield research tooling (M0 foundation–M3)",
     )
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
@@ -70,6 +71,12 @@ def build_parser() -> argparse.ArgumentParser:
         "d1", help="build and display a small real mini_7 evidence window"
     )
     _add_cache_build_arguments(d1_parser)
+    d2_parser = demo_commands.add_parser(
+        "d2", help="run the disposable M3 clean/corrupted integration fixture"
+    )
+    d2_parser.add_argument(
+        "--fixture", required=True, help="explicit path to the M3 fixture JSON"
+    )
     return parser
 
 
@@ -171,6 +178,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"agent registry error: {exc}", file=sys.stderr)
             return 2
         sys.stdout.buffer.write(canonical_json_bytes(build_d0_payload(registry)))
+        return 0
+
+    if args.command == "demo" and args.demo_command == "d2":
+        try:
+            payload = build_d2_payload(args.fixture)
+        except IntegrationFixtureError as exc:
+            print(f"integration fixture error: {exc}", file=sys.stderr)
+            return 2
+        sys.stdout.buffer.write(canonical_json_bytes(payload))
         return 0
 
     if args.command == "cache" and args.cache_command == "verify":

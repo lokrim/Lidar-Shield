@@ -1,6 +1,6 @@
 # Milestone status
 
-## Implemented: M0, M1, and M2
+## Implemented: M0, M1, M2, and M3
 
 - Distribution/import package and editable CLI installation.
 - Strict YAML configuration loading with explicit, config-relative paths.
@@ -24,12 +24,26 @@
 - Historical diagnostic and separately named unknown-aware fixed baselines.
 - Hash-stable verified clean Parquet cache, stale/incomplete resume rejection,
   complete official-source manifest, and D1 five-agent playback.
+- Final versioned runtime contracts for prediction/calibration availability,
+  state transitions, message descriptors/packets, schedules, fusion, and M3
+  integration metrics under one immutable fixture-run identity.
+- Unknown-aware fixed risk through configurable EWMA, explicit unknown
+  behavior, threshold-only state labels, transition reasons, and bounded
+  sequence/session/agent state.
+- Canonical proxy packet bytes with measured cost and integrity metadata shared
+  by full-share and hard-gate baselines under one deadline model.
+- Framework-neutral mean proxy fusion with normalized valid contributors,
+  exact ego fallback, ego-absent abstention, and quality/uncertainty metadata.
+- D2 clean/integration-corruption comparison with analytically expected risk,
+  state, byte, error, missing-row, companion, fallback, and abstention results.
 
 ## Intentionally not implemented
 
-M3 and later own attacks, learned models, temporal state, communication/fusion,
-scientific replay/evaluation, and reports. M5 owns the multi-sequence contextual
-normalizers; M2's fixed count reference is development-only.
+M4 and later own scientific attacks, learned models, scientific replay/evaluation,
+and reports. M5 owns the multi-sequence contextual normalizers; M2's fixed count
+reference is development-only. M7 owns elapsed-time accumulation and full
+hysteretic quarantine/recovery. M8 owns tiered/soft/budget scheduling and robust
+fusion. M3's corruption stays test-only and scientifically ineligible.
 
 Authoritative sensor/map-to-top calibration and nominal coverage are still
 unavailable. Real transform-dependent spatial/visibility/corroboration evidence

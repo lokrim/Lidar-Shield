@@ -1,4 +1,4 @@
-# M0–M2 verification record
+# M0–M3 verification record
 
 Verification is run with `scripts/verify_m0.sh`, which performs a frozen editable
 sync, CLI version/config smoke checks, dataset-free tests, Ruff lint/format, and
@@ -10,6 +10,21 @@ contract, synchronization, geometry, split, leakage, fixture, and manifest check
 M2 adds `scripts/verify_m2.sh`, which runs all static/test gates and, when the
 official archive is present, the two-frame real D1 cache/playback and cache
 verification.
+
+M3 adds `scripts/verify_m3.sh`, which prints the dataset-free D2 clean versus
+integration-corruption result and runs the complete test, lint, format, and
+strict-type gate. It writes no scientific experiment artifact.
+
+- Local macOS arm64, CPython 3.12.13, 2026-09-15 (M3): passed. Observed 97
+  tests passing and one optional real-data test skipped, with 91.45%
+  branch-aware coverage; Ruff and strict mypy passed. D2 reproduced target risk
+  `0.0 → 1.0`, EWMA risk `0.0 → 0.30`, state `normal → quarantined`, full-share
+  corrupted-source bytes `725`, hard-gate corrupted-source bytes `0`,
+  full-share aggregate proxy error `3.299831645537222`, and hard-gate aggregate
+  proxy error `0.0`. Both policies reported ego-only fallback and ego-absent
+  abstention from the same immutable fixture identity. `uv build` produced the
+  source distribution and wheel; the wheel contains all M3 runtime modules and
+  no tests, raw data, planning tree, or historical dependency.
 
 - Local macOS arm64, CPython 3.12.13, 2026-09-15 (M2): passed. Observed 74
   tests passing with 90.10% branch-aware coverage; Ruff and strict mypy passed.
