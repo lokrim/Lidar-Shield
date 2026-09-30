@@ -1,0 +1,2 @@
+# Keep hash-bound source and fixture bytes identical across platforms.
+* text=auto eol=lf

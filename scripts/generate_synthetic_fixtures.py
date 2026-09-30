@@ -257,7 +257,7 @@ def main() -> None:
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(content)
     manifest = json.dumps(build_manifest(), indent=2, sort_keys=True) + "\n"
-    (output / "manifest.json").write_text(manifest, encoding="utf-8")
+    (output / "manifest.json").write_bytes(manifest.encode("utf-8"))
 
 
 if __name__ == "__main__":
